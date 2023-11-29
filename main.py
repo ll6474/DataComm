@@ -39,19 +39,15 @@ def processRTTB(rtgTable,destination_ip):
 
         match = all((network_parts[i] & netmask_parts[i]) == (destination_ip_int[i] & netmask_parts[i]) for i in range(4))
 
-
         if match:
             print(f'Entry Found: {i} : {[entries]}')
-            print(f"Gateway: {gateway}, Interface: {interface}")
 
-            if destination_ip == gateway:
-                print("ARP for the destination IP address.")
-            elif gateway == '0.0.0.0':
-                print("ARP for the default gateway")
+            if gateway == interface:
+                print(f"ARP for the destination {gateway}")
             else:
-                print("No APR needed")
-
+                print(f"ARP for default gateway {gateway}")
             return
+
     print("No matching entry found in the routing table.")
 
 
