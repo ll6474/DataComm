@@ -17,24 +17,25 @@ def processRTTB(rtgTable,destination_ip):
         return
 
     destination_ip_int = list(map(int,destination_ip.split('.')))
-    #destination_ip_binary = convertToBinary(destination_ip)
 
     for i, entries in enumerate(rtgTable,start=1):
         network,netmask,gateway,interface = entries
-        # network_parts = convertToBinary(network)
-        # netmask_parts = convertToBinary(netmask)
         network_parts = list(map(int,network.split('.')))
         netmask_parts = list(map(int,netmask.split('.')))
 
         print(f'Processing entry {i} : {[entries]}')
 
-        for j in range(1):
+        result_table = []
+        result_input = []
+        for j in range(len(destination_ip_int)):
             table_and = network_parts[j] & netmask_parts[j]
             table_result = convertToBinary(table_and)
-            print(f"ANDing result of network and mask: {table_result}")
+            result_table.append(table_result)
             destination_and = destination_ip_int[j] & netmask_parts[j]
             destination_result = convertToBinary(destination_and)
-            print(f"ANDing result of destination and mask: {destination_result}")
+            result_input.append(destination_result)
+        print(f"ANDing result of network and mask from table: {result_table}")
+        print(f"ANDing result of input destination and mask: {result_input}")
 
         match = all((network_parts[i] & netmask_parts[i]) == (destination_ip_int[i] & netmask_parts[i]) for i in range(4))
 
@@ -60,9 +61,11 @@ def checkValidInput(destination_ip):
     :param destination_ip: user input
     :return: true/false
     """
-
-    ips = list(map(int,destination_ip.split('.')))
-    return len(ips) == 4 and all(0 <= part <= 255 for part in ips)
+    try:
+        ips = list(map(int,destination_ip.split('.')))
+        return len(ips) == 4 and all(0 <= part <= 255 for part in ips)
+    except ValueError:
+        return False
 
 
 def convertToBinary(ip):
@@ -71,13 +74,6 @@ def convertToBinary(ip):
     :param ip: ip address
     :return: binary
     """
-    # result = []
-    # for i in ip.split('.'):
-    #     result.append("{0:b}".format(int(i)))
-    # return ''.join(result)
-    # for i in ip.split('.'):
-    #     result.append(format(int(i),'08b'))
-    # return ''.join(result)
     return "{0:b}".format(int(ip))
 
 
