@@ -37,9 +37,9 @@ def processRTTB(rtgTable,destination_ip):
         print(f"ANDing result of network and mask from table: {result_table}")
         print(f"ANDing result of input destination and mask: {result_input}")
 
-        match = all((network_parts[i] & netmask_parts[i]) == (destination_ip_int[i] & netmask_parts[i]) for i in range(4))
+        compare = all((network_parts[i] & netmask_parts[i]) == (destination_ip_int[i] & netmask_parts[i]) for i in range(4))
 
-        if match:
+        if compare:
             print(f'Entry Found: {i} : {[entries]}')
 
             if gateway == interface:
@@ -77,7 +77,7 @@ def op_file(filenames):
     """
     Parse the ip address from the file and store them as a list in reversed order
     :param filenames: routing table file name
-    :return: lists stored the host table ip address
+    :return: lists store the host routing table entries
     """
 
     try:
